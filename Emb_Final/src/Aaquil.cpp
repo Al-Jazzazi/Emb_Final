@@ -10,7 +10,7 @@ double vReal[samples];
 double vImag[samples];
 
 // Initialize FFT object
-arduinoFFT FFT = arduinoFFT(vReal, vImag, samples, samplingFrequency);
+ArduinoFFT<double> FFT = ArduinoFFT<double>(vReal, vImag, samples, samplingFrequency);
 
 // Moving average filter
 void moving_avg(double* vReal) {
@@ -28,9 +28,9 @@ void moving_avg(double* vReal) {
 }
 
 double getDominantFrequency(double* vReal) {
-    FFT.Windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-    FFT.Compute(FFT_FORWARD);
-    FFT.ComplexToMagnitude();
+    FFT.windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+    FFT.compute(FFT_FORWARD);
+    FFT.complexToMagnitude();
 
     double maxMagnitude = 0;
     uint16_t indexOfMax = 0;
