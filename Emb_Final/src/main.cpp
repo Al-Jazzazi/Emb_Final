@@ -7,6 +7,19 @@
 #define SAMPLING_FREQUENCY 50      // Sampling frequency (50 Hz)
 #define AMPLITUDE 100              // Signal amplitude
 
+extern "C" {
+    #include "indicators.h"
+}
+
+int main() {
+    setupIndicators();
+
+    while (1) {
+        float simulated_freq = 6.2;
+        showIndicators(simulated_freq);
+        _delay_ms(1000);  // 1 second between checks
+    }
+}
 
 // Data arrays for storing accelerometer readings
 float xData[SAMPLES];
