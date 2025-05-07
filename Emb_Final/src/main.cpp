@@ -7,19 +7,7 @@
 #define SAMPLING_FREQUENCY 50      // Sampling frequency (50 Hz)
 #define AMPLITUDE 100              // Signal amplitude
 
-extern "C" {
-    #include "indicators.h"
-}
 
-int main() {
-    setupIndicators();
-
-    while (1) {
-        float simulated_freq = 6.2;
-        showIndicators(simulated_freq);
-        _delay_ms(1000);  // 1 second between checks
-    }
-}
 
 // Data arrays for storing accelerometer readings
 float xData[SAMPLES];
@@ -73,6 +61,33 @@ inline void displayData(float x[], float y[], float z[]) {
   }
 }
 
+void indicator(double freq) {
+  if (freq >= 3 && freq <= 5) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      tone(5, 1000);
+      for (uint8_t i = 0; i < 20; i++) {
+        CircuitPlayground.clearPixels();
+        CircuitPlayground.setPixelColor(i%10, 255, 0, 0); // R, G, B
+        // CircuitPlayground.showPixels();
+        delay(200);
+      }
+      CircuitPlayground.clearPixels();
+  } else if (freq > 5 && freq <= 7) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      tone(5, 1500);
+      for (uint8_t i = 0; i < 20; i++) {
+        CircuitPlayground.clearPixels();
+        CircuitPlayground.setPixelColor(i%10, 0, 0, 255); // R, G, B
+        // CircuitPlayground.showPixels();
+        delay(200);
+      }
+      CircuitPlayground.clearPixels();
+  } else {
+      digitalWrite(LED_BUILTIN, LOW);
+      noTone(5);
+  }
+}
+
 void collectAccelerometerData() {
   unsigned long currentMillis = millis();
 
@@ -106,6 +121,7 @@ void collectAccelerometerData() {
     Serial.println("Data collection complete for 3 seconds.");
     // Get the dominant frequency from FFT
     double freq = getDominantFrequency(vReal);
+    indicator(freq);
     Serial.print("Dominant Frequency: ");
     Serial.print(freq);
     Serial.println(" Hz");
