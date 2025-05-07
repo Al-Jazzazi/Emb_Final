@@ -28,19 +28,17 @@ void indicator(double freq) {
   CircuitPlayground.clearPixels();
   if (freq >= 3 && freq <= 5) {
       digitalWrite(LED_BUILTIN, HIGH);
-      // tone(5, 1000);
+      tone(5, 1000);
       for (uint8_t i = 0; i < 10; i++) {
 
         CircuitPlayground.setPixelColor(i, 255, 0, 0); // R, G, B
-        // CircuitPlayground.showPixels();
 
       }
   } else if (freq > 5 && freq <= 7) {
       digitalWrite(LED_BUILTIN, HIGH);
-      // tone(5, 1500);
+      tone(5, 1500);
       for (uint8_t i = 0; i < 10; i++) {
         CircuitPlayground.setPixelColor(i, 0, 0, 255); // R, G, B
-        // CircuitPlayground.showPixels();
       }
  
     }
