@@ -1,3 +1,4 @@
+
 #include <Arduino.h>
 #include <Adafruit_CircuitPlayground.h>
 #include "arduinoFFT.h"
@@ -6,7 +7,6 @@
 #define SAMPLING_INTERVAL 3000      // Sampling interval in milliseconds (3 seconds)
 #define SAMPLING_FREQUENCY 50      // Sampling frequency (50 Hz)
 #define AMPLITUDE 100              // Signal amplitude
-
 
 
 // Data arrays for storing accelerometer readings
@@ -24,6 +24,28 @@ unsigned long startSampleTime = 0;
 int sampleIndex = 0;
 
 
+void indicator(double freq) {
+  CircuitPlayground.clearPixels();
+  if (freq >= 3 && freq <= 5) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      // tone(5, 1000);
+      for (uint8_t i = 0; i < 10; i++) {
+
+        CircuitPlayground.setPixelColor(i, 255, 0, 0); // R, G, B
+        // CircuitPlayground.showPixels();
+
+      }
+  } else if (freq > 5 && freq <= 7) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      // tone(5, 1500);
+      for (uint8_t i = 0; i < 10; i++) {
+        CircuitPlayground.setPixelColor(i, 0, 0, 255); // R, G, B
+        // CircuitPlayground.showPixels();
+      }
+ 
+    }
+  
+  }
 double getDominantFrequency(double* vReal) {
     // Apply window function (Hamming window)
     FFT.windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
@@ -61,33 +83,6 @@ inline void displayData(float x[], float y[], float z[]) {
   }
 }
 
-void indicator(double freq) {
-  if (freq >= 3 && freq <= 5) {
-      digitalWrite(LED_BUILTIN, HIGH);
-      tone(5, 1000);
-      for (uint8_t i = 0; i < 20; i++) {
-        CircuitPlayground.clearPixels();
-        CircuitPlayground.setPixelColor(i%10, 255, 0, 0); // R, G, B
-        // CircuitPlayground.showPixels();
-        delay(200);
-      }
-      CircuitPlayground.clearPixels();
-  } else if (freq > 5 && freq <= 7) {
-      digitalWrite(LED_BUILTIN, HIGH);
-      tone(5, 1500);
-      for (uint8_t i = 0; i < 20; i++) {
-        CircuitPlayground.clearPixels();
-        CircuitPlayground.setPixelColor(i%10, 0, 0, 255); // R, G, B
-        // CircuitPlayground.showPixels();
-        delay(200);
-      }
-      CircuitPlayground.clearPixels();
-  } else {
-      digitalWrite(LED_BUILTIN, LOW);
-      noTone(5);
-  }
-}
-
 void collectAccelerometerData() {
   unsigned long currentMillis = millis();
 
@@ -121,11 +116,10 @@ void collectAccelerometerData() {
     Serial.println("Data collection complete for 3 seconds.");
     // Get the dominant frequency from FFT
     double freq = getDominantFrequency(vReal);
-    indicator(freq);
     Serial.print("Dominant Frequency: ");
     Serial.print(freq);
     Serial.println(" Hz");
-
+    indicator(freq);
     // Reset for next collection cycle
     sampleIndex = 0;  // Reset sample index for the next cycle
     startSampleTime = currentMillis;  // Reset start time for the next collection
